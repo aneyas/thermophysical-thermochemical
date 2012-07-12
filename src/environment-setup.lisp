@@ -9,14 +9,14 @@
   (merge-pathnames
    #P"my-software-add-ons/my-lisp/modeling/thermophysical+thermochemical/thermo-data/"
    #+WTEHCFMXYP1 #p"/home/977315/"
-   #+CYSSHD1 #P"/home/mv/")
+   #+WTEHCYSSHD1 #P"/home/977315/")
   "Path to the data directory (not including JANAF tables)")
 
 (defparameter *janaf-directory*
   (merge-pathnames
    #P"my-software-add-ons/my-lisp/modeling/thermophysical+thermochemical/janaf/"
    #+WTEHCFMXYP1 #p"/home/977315/"
-   #+CYSSHD1 #P"/home/mv/")
+   #+WTEHCYSSHD1 #P"/home/977315/")
   "Path to the JANAF data directory")
 
 

@@ -1,35 +1,37 @@
-Packages in this repository
-- Thermophysical and Thermochemical coefficients for gases and liquids
-- Collision integrals
-- Transport coefficients for low pressure gases
+#+title: Thermophysical and Thermochemical calculations
 
-Package Thermophysical and Thermochemical coefficients for gases and
-liquids contains data for:
-- Density and specific volume
-- C_p and C_v
-- Enthalpy and entropy
-- Internal energy and speed of sound
-- Viscosity and thermal conductivity
-- Joule-Thomson coefficient Surface tension (saturation curve only)
+* Packages in this repository
+  - Thermophysical and Thermochemical coefficients for gases and liquids
+  - Collision integrals
+  - Transport coefficients for low pressure gases
 
-This package does not include ab-initio methods for calculating the
-properties.  It only includes methods based on simple formulas or
-table interpolation.
+  Package Thermophysical and Thermochemical coefficients for gases and
+  liquids contains data for:
+  - Density and specific volume
+  - C_p and C_v
+  - Enthalpy and entropy
+  - Internal energy and speed of sound
+  - Viscosity and thermal conductivity
+  - Joule-Thomson coefficient Surface tension (saturation curve only)
 
-The data is obtained from on-line databases (such as the NIST webbook)
-and journal articles.
+  This package does not include ab-initio methods for calculating the
+  properties.  It only includes methods based on simple formulas or
+  table interpolation.
 
-All internal calculations and all results are a mixture of SI and
-chemistry friendly units - atomic mass units, etc.
+  The data is obtained from on-line databases (such as the NIST
+  webbook) and journal articles.
 
-Package for collision integrals
-- Reads table of Lennard-Jones potential parameters
-- Provides fitting formulas for collision integrals Omega-11 and
-  Omega-22
+  All internal calculations and all results are a mixture of SI and
+  chemistry friendly units - atomic mass units, etc.
 
-This package is used by the transport coefficients.  As it is closer
-to gas kinetic theory, it uses SI units (mass is in kg, cross-sections
-in meters)  
+  Package for collision integrals
+  - Reads table of Lennard-Jones potential parameters
+  - Provides fitting formulas for collision integrals Omega-11 and
+    Omega-22
+
+  This package is used by the transport coefficients.  As it is closer
+  to gas kinetic theory, it uses SI units (mass is in kg, cross-sections
+  in meters)  
 
 * Warning
   Thermal conductivity calculated using Lennard-Jones collision

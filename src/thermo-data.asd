@@ -20,11 +20,6 @@
 				:depends-on ("tc-external-interface"))
 			 (:file "janaf-coefficients"
 				:depends-on ("tc-external-interface"))))
-   #|(:module "collision-parameters"
-	    :pathname #P"./"
-	    :depends-on ("thermo-setup")
-	    :components ((:file "lennard-jones-coeffs")
-			 (:file "collision-integrals")))|#
    (:module "transport-coefficients"
 	    ;; coefficients depend on atomic parameter and transport
 	    ;; models.  They are obtained by interpolating tables and

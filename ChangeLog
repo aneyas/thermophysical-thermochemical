@@ -1,3 +1,13 @@
+2012-07-12  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* src/thermo-data.asd (:thermo-data): Removed collision integrals
+	and lennard-jones references.  These are now part of a separate
+	package
+
+	* src/environment-setup.lisp (*data-directory*)
+	(*janaf-directory*): Fixed selector to new windows workstation
+
+
 2012-06-13  Mirko Vukovic  <mirko.vukovic@us.tel.com>
 
 	* transport-coefficients/generic-functions.lisp (mu2 mu2-1): Updated
