@@ -1,0 +1,608 @@
+<?xml version="1.0" encoding="iso-8859-1"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN"
+               "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+lang="en" xml:lang="en">
+<head>
+<title>guided-tour</title>
+<meta http-equiv="Content-Type" content="text/html;charset=iso-8859-1"/>
+<meta name="generator" content="Org-mode"/>
+<meta name="generated" content="2011-03-01 11:01:59 EST"/>
+<meta name="author" content="Mirko Vukovic"/>
+<meta name="description" content=""/>
+<meta name="keywords" content=""/>
+<style type="text/css">
+ <!--/*--><![CDATA[/*><!--*/
+  html { font-family: Times, serif; font-size: 12pt; }
+  .title  { text-align: center; }
+  .todo   { color: red; }
+  .done   { color: green; }
+  .tag    { background-color: #add8e6; font-weight:normal }
+  .target { }
+  .timestamp { color: #bebebe; }
+  .timestamp-kwd { color: #5f9ea0; }
+  .right  {margin-left:auto; margin-right:0px;  text-align:right;}
+  .left   {margin-left:0px;  margin-right:auto; text-align:left;}
+  .center {margin-left:auto; margin-right:auto; text-align:center;}
+  p.verse { margin-left: 3% }
+  pre {
+	border: 1pt solid #AEBDCC;
+	background-color: #F3F5F7;
+	padding: 5pt;
+	font-family: courier, monospace;
+        font-size: 90%;
+        overflow:auto;
+  }
+  table { border-collapse: collapse; }
+  td, th { vertical-align: top;  }
+  th.right  { text-align:center;  }
+  th.left   { text-align:center;   }
+  th.center { text-align:center; }
+  td.right  { text-align:right;  }
+  td.left   { text-align:left;   }
+  td.center { text-align:center; }
+  dt { font-weight: bold; }
+  div.figure { padding: 0.5em; }
+  div.figure p { text-align: center; }
+  textarea { overflow-x: auto; }
+  .linenr { font-size:smaller }
+  .code-highlighted {background-color:#ffff00;}
+  .org-info-js_info-navigation { border-style:none; }
+  #org-info-js_console-label { font-size:10px; font-weight:bold;
+                               white-space:nowrap; }
+  .org-info-js_search-highlight {background-color:#ffff00; color:#000000;
+                                 font-weight:bold; }
+  /*]]>*/-->
+</style>
+<script type="text/javascript">
+<!--/*--><![CDATA[/*><!--*/
+ function CodeHighlightOn(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(null != target) {
+     elem.cacheClassElem = elem.className;
+     elem.cacheClassTarget = target.className;
+     target.className = "code-highlighted";
+     elem.className   = "code-highlighted";
+   }
+ }
+ function CodeHighlightOff(elem, id)
+ {
+   var target = document.getElementById(id);
+   if(elem.cacheClassElem)
+     elem.className = elem.cacheClassElem;
+   if(elem.cacheClassTarget)
+     target.className = elem.cacheClassTarget;
+ }
+/*]]>*///-->
+</script>
+
+</head>
+<body>
+<div id="content">
+
+<h1 class="title">guided-tour</h1>
+
+<div id="table-of-contents">
+<h2>Table of Contents</h2>
+<div id="text-table-of-contents">
+<ul>
+<li><a href="#sec-1">1 Setting up </a></li>
+<li><a href="#sec-2">2 General notes </a>
+<ul>
+<li><a href="#sec-2_1">2.1 Default calculation methods </a></li>
+</ul>
+</li>
+<li><a href="#sec-3">3 Thermodynamic coefficients </a>
+<ul>
+<li><a href="#sec-3_1">3.1 Temperature ranges </a></li>
+</ul>
+</li>
+<li><a href="#sec-4">4 Plotting </a>
+<ul>
+<li><a href="#sec-4_1">4.1 Collision parameters </a></li>
+</ul>
+</li>
+<li><a href="#sec-5">5 Transport coefficients </a>
+<ul>
+<li><a href="#sec-5_1">5.1 Comparison of Argon &lambda;<sub>0</sub> using various methods </a></li>
+</ul>
+</li>
+</ul>
+</div>
+</div>
+
+<div id="outline-container-1" class="outline-2">
+<h2 id="sec-1"><span class="section-number-2">1</span> Setting up </h2>
+<div class="outline-text-2" id="text-1">
+
+
+<p>
+Lisp setup loads the systems and sets the `thermo-user' package
+</p>
+
+
+<pre class="example">(in-package :cl-user)
+(load-asdf-system :thermo)
+(load-asdf-system :thermo-user)
+(in-package :thermo-user)
+</pre>
+
+
+
+
+
+<p>
+The package thermo-user is intended for the user to use and explore
+the facilities provided by the thermophysics&amp;chemistry package.  It
+includes gnuplot and mv-grid-utils for graphical and tabular
+exploration. 
+</p>
+<p>
+The package :thermo is for the package development.
+</p>
+
+</div>
+
+</div>
+
+<div id="outline-container-2" class="outline-2">
+<h2 id="sec-2"><span class="section-number-2">2</span> General notes </h2>
+<div class="outline-text-2" id="text-2">
+
+
+
+</div>
+
+<div id="outline-container-2_1" class="outline-3">
+<h3 id="sec-2_1"><span class="section-number-3">2.1</span> Default calculation methods </h3>
+<div class="outline-text-3" id="text-2_1">
+
+
+
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-3" class="outline-2">
+<h2 id="sec-3"><span class="section-number-2">3</span> Thermodynamic coefficients </h2>
+<div class="outline-text-2" id="text-3">
+
+
+<p>
+The thermodynamic coefficients, such as S, Cp, H are provided by two
+types of utilities, based on NIST's webbook: formulas using the
+Shomate coefficients, or data interpolation tables.
+</p>
+<p>
+One can use either the defaults or specify explicity which method.
+This is illustrated below for the calculation of H2 specific heat.
+</p>
+
+<p>
+The default method is used if we specify the species symbols
+</p>
+
+
+<pre class="example">(Cp :H2 300) 
+</pre>
+
+
+
+
+<p>
+Instead, we can explicitly specify the shomate fit coefficients
+</p>
+
+
+<pre class="example">(Cp (make-shomate-coeffs :H2) 300) 
+</pre>
+
+
+
+
+<p>
+Or we can use the interpolation of the Janaf tables.  This call uses
+GSLL's spline interpolation facilities.
+</p>
+
+
+<pre class="example">(Cp (make-janaf-coeffs :H2) 300)
+</pre>
+
+
+
+
+
+
+<p>
+The shomate coefficients are stored in the thermo-data directory, in
+files such as H2.shomate using a lisp format.
+</p>
+<p>
+Janaf coefficients are stored in the janaf directory, in files such as
+H2.dat using a txt format.
+</p>
+
+
+
+
+
+</div>
+
+<div id="outline-container-3_1" class="outline-3">
+<h3 id="sec-3_1"><span class="section-number-3">3.1</span> Temperature ranges </h3>
+<div class="outline-text-3" id="text-3_1">
+
+
+<p>
+For most coefficients, we have included the valid temperature range,
+and if the requested temperature falls outside of it, an error
+condition is thrown.
+</p>
+
+
+
+<pre class="example">(Cp (make-shomate-coeffs :H2) 100);;-&gt; error
+</pre>
+
+
+
+
+
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-4" class="outline-2">
+<h2 id="sec-4"><span class="section-number-2">4</span> Plotting </h2>
+<div class="outline-text-2" id="text-4">
+
+
+<p>
+The thermo-user package is build on top mv-grid-utils and mv-gnuplot.
+This allows for simple plotting using the gcmap macro.
+</p>
+<p>
+After creating a plot window,
+</p>
+
+
+<pre class="example">(new-window)
+</pre>
+
+
+
+
+<p>
+We can create a plot comparing the specific heat
+calculated by the two methods: 
+</p>
+
+
+<pre class="example">(let ((temp (lseq 300 1000))
+      (sh (make-shomate-coeffs :H2))
+      (j (make-janaf-coeffs :H2)))
+(set-to ((:xlabel "T [K]")
+         (:ylabel "Cp [J/mol K]"))
+  (plot-xys temp
+            (list (list (gcmap (Cp sh @!temp) temp) :title "Shomate")
+                  (list (gcmap (Cp j @!temp) temp) :title "Interpolation")))))
+
+
+</pre>
+
+
+<p>
+<img src="H2-Cp-vs-temp--shomate-vs-interp-data-comp.png"  alt="H2-Cp-vs-temp--shomate-vs-interp-data-comp.png" />
+</p><pre class="example">
+NIL
+</pre>
+
+
+
+
+<p>
+This plot demonstrates the use of currying as applied to grids via
+`gcmap'.  It also shows that currently, the arguments of the curried
+function have to be atoms and not forms that are to be evaluated
+</p>
+<p>
+To save this plot to a post-script file, we use the following facility
+from mv-gnuplot
+</p>
+
+
+<pre class="example">(with-ps-output ("shomate-vs-interpolation.ps" #P"./")
+  (let ((temp (lseq 300 1000))
+        (sh (make-shomate-coeffs :H2))
+        (j (make-janaf-coeffs :H2)))
+    (plot-xys temp
+              (list (list (gcmap (Cp sh @!temp) temp) :title "Shomate")
+                    (list (gcmap (Cp j @!temp) temp) :title "Interpolation")))))
+</pre>
+
+
+
+
+<p>
+This creates a post-script file in lisp's run directory.  There are
+currently no options for other output types (such as png).
+</p>
+<p>
+Similar plots can be made for S, and H-rel
+</p>
+
+
+
+
+
+</div>
+
+<div id="outline-container-4_1" class="outline-3">
+<h3 id="sec-4_1"><span class="section-number-3">4.1</span> Collision parameters </h3>
+<div class="outline-text-3" id="text-4_1">
+
+
+<p>
+The collision parameter module offers the following functionality:
+</p>
+<ul>
+<li>Loading the Lennard-Jones collision parameters from
+   lennard-jones-coeffs.lisp
+</li>
+<li>Calculation of the Omega-11 and Omega-22 collision integrals
+</li>
+</ul>
+
+<p>
+The Lennard-Jones parameters can be obtained in two ways:
+</p>
+
+
+
+<pre class="example">(make-lj-coeffs :H2);;-&gt;#&lt;THERMO::LJ-COEFFS Lennard-Jones coefficients for H2 {BAE0059}&gt;
+</pre>
+
+
+
+
+
+<pre class="example">(lennard-jones-coeffs :H2) ;;-&gt;((:M 2.016) (:SIGMA 2.915) (:EPSILON/K 38.0) (:TC 33.3))
+</pre>
+
+
+
+
+
+
+<p>
+The collision integrals are calculated using the equations by Kee et
+al by the following calls
+</p>
+
+
+
+<pre class="example">(omega-11 1.0);;-&gt;1.4361933
+</pre>
+
+
+
+
+
+<pre class="example">(omega-22 1.0);;-&gt;1.6007648
+</pre>
+
+
+
+
+
+
+<p>
+The infrastructure for the collision integrals allows multiple methods
+to be used to calculate the coefficients.
+</p>
+<p>
+The individual methods are defined by classes:
+</p><ul>
+<li>Kee-omega-11-coeffs
+</li>
+<li>Kee omega-22-coeffs
+</li>
+<li>LJ04-omega-22-coeffs from the Lemmon&amp;Jacobsen paper
+</li>
+</ul>
+
+<p>
+So, instead of the defaults, we can choose the calculation method by
+calling slightly different functions: 
+</p>
+
+
+
+<pre class="example">(omega-22% (make-kee-omega-22-coeffs) 1.0);;-&gt;1.6007648
+</pre>
+
+
+
+
+
+<pre class="example">(omega-22% (make-lj04-omega-22-coeffs) 1.0);;-&gt;1.5387956
+</pre>
+
+
+
+
+
+
+<p>
+The Kee approximation is preferred to that of Lemmon &amp; Jacobsen as
+these have a more restricted validity region:
+</p>
+
+
+<pre class="example">(let ((temp (gseq 0.1 100))
+      (k (make-kee-omega-22-coeffs))
+      (lj04 (make-lj04-omega-22-coeffs)))
+  (set-to ((logscale :xy)
+           (xlabel "T_reduced")
+           (ylabel "Omega"))
+    (plot-xys temp
+              (list (list (gcmap (omega-22%  k @!temp) temp) :title "Kee")
+                    (list (gcmap (omega-22% lj04 @!temp) temp) :title "LJ04")))))
+</pre>
+
+
+
+
+<p>
+<img src="Omega-22-approx-comp.png"  alt="Omega-22-approx-comp.png" />
+</p>
+</div>
+</div>
+
+</div>
+
+<div id="outline-container-5" class="outline-2">
+<h2 id="sec-5"><span class="section-number-2">5</span> Transport coefficients </h2>
+<div class="outline-text-2" id="text-5">
+
+
+<p>
+The package 
+</p>
+<ul>
+<li>viscosity
+</li>
+<li>thermal conductivity
+</li>
+<li>diffusion
+</li>
+</ul>
+
+<p>
+Viscosity is calculated using the kinetic theory result and the Lennard-Jones parameters as follows:
+</p>
+
+
+
+<pre class="example">(mu-0 :H2 350)
+</pre>
+
+
+
+
+<p>
+ The story is more complicated for thermal conductivity, as it
+depends on the internal degrees of freedom, encapsulated in Cv.
+</p>
+<p>
+So, in practice, there will be many methods for different gases.
+</p>
+<p>
+From the references found so far I have assembled the following
+methods:
+</p><ul>
+<li>Lemmon &amp; Jacobsen for N2, Ar, O2 and Air
+</li>
+<li>Assael et al for H2
+</li>
+<li>Kinetic theory forulation using Cv for He
+</li>
+</ul>
+
+<p>
+These are captured in their objects and set as defaults, so that the
+following works nicely:
+</p>
+
+
+
+<pre class="example">(lambda-0 :H2 350);;-&gt;0.21095513871295823d0
+</pre>
+
+
+
+
+
+<pre class="example">(lambda-0 :O2 350);;-&gt;0.029757758335946592d0
+</pre>
+
+
+
+
+<p>
+As with all the other coefficients, these provide temperature checks.
+</p>
+<p>
+One has to be careful with the thermal conductivity calculations, as
+these formulations may use the gas &mu;<sub>0</sub> and C<sub>v</sub> to calculate the
+thermal conductivity, &lambda;<sub>0</sub>.  Any errors in &mu;<sub>0</sub> and C<sub>v</sub>
+calculations will propagate then into \lamba<sub>0</sub>.
+</p>
+
+</div>
+
+<div id="outline-container-5_1" class="outline-3">
+<h3 id="sec-5_1"><span class="section-number-3">5.1</span> Comparison of Argon &lambda;<sub>0</sub> using various methods </h3>
+<div class="outline-text-3" id="text-5_1">
+
+
+<p>
+   Argon thermal conductivity can be calculated using the
+   Lemmon-Jacobsen fits, or using the kinetic theory formalism.  The
+   following plot compares their predictions (and serves as a
+   cross-check).
+</p>
+
+
+
+<pre class="example">(let ((Temp (lseq 200.0 380.))
+      (coeff (make-lj-coeffs :Ar)))
+(set-to ((xlabel "T [K]")
+         (ylabel "lambda_0 [W/m K]"))
+  (plot-xys Temp 
+            (list (list (gcmap (lambda-0 coeff @!Temp) Temp) :title "Kinetic Theory")
+                  (list (gcmap (lambda-0 :Ar @!Temp) Temp) :title "Lemmon-Jacobsen")))))
+</pre>
+
+
+
+
+<p>
+<a href="Ar-lambda_0--lemmon-jackobsen-vs-kinetic-theory.png">Argon &lambda;<sub>0</sub> calculated from kinetic theory and Lemmon-Jacobsen fit</a>   
+</p>
+
+
+
+<p>
+Not implemente yet are 
+</p><ul>
+<li>hard-sphere models (of academic interest)
+</li>
+<li>Sutherland model
+</li>
+<li>transport coefficients for mixtures.
+</li>
+</ul>
+
+
+
+</div>
+</div>
+</div>
+<div id="postamble">
+<p class="author">Author: Mirko Vukovic (<a href="mailto:Mirko Vukovic <mirko.vukovic@us.tel.com>">Mirko Vukovic <mirko.vukovic@us.tel.com></a>)</p>
+<p class="date">Date: 2011-03-01 11:01:59 EST</p>
+<p class="creator">Generated by Org version 7.4 with Emacs version 23</p>
+<p class="xhtml-validation"><a href="http://validator.w3.org/check?uri=referer">Validate XHTML 1.0</a></p>
+</div>
+</div>
+</body>
+</html>
