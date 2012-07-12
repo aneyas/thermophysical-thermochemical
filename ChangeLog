@@ -1,0 +1,186 @@
+2012-06-13  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* transport-coefficients/generic-functions.lisp (mu2 mu2-1): Updated
+	documentation for the interface and generic function.
+
+	* transport-coefficients/mcc-viscosity.lisp (mu2-1): Redefined
+	returned values for the McCormack model.  Instead of returning mu1
+	& mu2, I return the total viscosity.  Individual viscosities are
+	avaiable via multiple values
+
+2012-05-27  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* transport-coefficients/cck-transport-coefficients.lisp
+	(alpha-T-1): Changed interface for cck to accomodate McCormack
+	formula that requires both p1 and p2
+
+	* transport-coefficients/generic-functions.lisp (D12b): Added
+	function for binary diffusion for a gas mix, explicitly dependent
+	on the potentials of each species, and their densities.  This
+	function is necessary for higher order binary diffusion
+	coefficients
+
+2012-05-18  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* transport-coefficients/generic-functions.lisp (lambda-ig1)
+	(lambda-ig2, lambda1): Refactoring of thermal conductivity.  I now
+	have separated lambda for ideal gas from that of non-ideal gas,
+	since the latter requires thermal conductivity
+
+2011-08-23  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* src/hs-collision-integrals.lisp (omega-hs-coeff, omegaLS-hs*):
+	Renamed omega-hs-coeff into omegaLS-hs*
+
+2011-08-18  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* src/tc-external-interface.lisp: Added unit tests for O2 Cv and
+	Cp.  Pass.
+
+	* src/kt-transport-coeffs.lisp (lambda-0-lj): Added uni test for
+	O2 thermal conductivity.  It fails by a factor of 1.27
+
+2011-08-17  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* src/lemmon-jacobsen-2004-coeffs.lisp
+	(LJ04-dilute-thermal-conductivity): Returns multiple values of all
+	terms in approximation.  Updated doc
+
+	* src/tc-external-interface.lisp (Cv, Cv&Cp): Renamed test Cv into
+	Cv&Cp.  Added documentation.  Verified correctness of CRC values.
+
+2011-08-16  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* README.org: Added more details to warning about thermal
+	conductivity calculations.
+
+	* src/environment-setup.lisp (+pi+): +pi+ is single precision
+	float.  It's used forced me to rearange the order of calculation
+	in lennard-jones mu-0 to prevent floating underflow.  When pi was
+	double float, this problem did not arise.
+
+	* src/kt-transport-coeffs.lisp (mu-0): Fixed order of calculations
+	to prevent an underflow that resulted in mu-0=0.0.  Fixed both hs
+	and lj methods
+
+	* src/transport-coeffs-external-interface.lisp (D-0): Fixed bug in
+	funcall to D-0.  Had two arguments instead of required three
+
+	* src/lemmon-jacobsen-2004-coeffs.lisp (Ni): Added error check
+	(): Added copyright header
+	(): Added documentation
+
+	* src/tc-external-interface.lisp (Cv): For species for which no
+	method is defined, I try calculating Cp and then subract N kb (see
+	doc).
+	(Cv): Added unit tests against CRC tables
+
+	* src/kt-transport-coeffs.lisp (mu-0 lambda-0): Fixed calling
+	structure to lj-coeffs and to omega-22 (now called omega-22* to
+	better conform to the start notation for reduced collision
+	integrals.
+	(): Added unit tests for mu-0 and lambda-0 based on lennard-jones
+	calculations.  The test for lambda-0 for N2 fails because the
+	conductivity is off by a factor of 1.25, while it is correct for
+	Ar.
+
+	* src/thermo-data.asd (:thermo-data): Added
+	`constant-thermo-coeffs' file to the `thermodynamic-coefficients'
+	module
+
+	* src/constant-thermo-coeffs.lisp (Cv): Added informative message
+	to assert form
+
+	* src/lennard-jones-coeffs.lisp (make-LJ-coeffs): Exporting m and
+	sigma.  I need to rethink symbol exporting since some of them (m
+	for example) are exposing the internals of the lj class.
+
+2011-08-15  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* src/package-def.lisp (:thermo): using collision-integrals symbols
+
+	* src/hs-collision-integrals.lisp (Omega11-hs): Implemented to be
+	similar to the prior definition in the gas-kinetic package.  The
+	Kee formula is flaky (see function documentation).
+	Added unit tests
+
+	* src/collision-integrals-defaults.lisp, src/collision-integrals-package-def.lisp:
+	Changed omega-11,22 to omega-11-22* (the star signifies a reduced
+	collision integral)
+
+	* src/lennard-jones-coeffs.lisp: Added `doc' slot for data
+	traceability.  But the rest of the code does not yet allow for
+	full traceability
+	(make-lj-coeffs): Hardcoded the data source.  Needs to be fixed in
+	a later release.
+
+	* src/kt-transport-coeffs.lisp (lambda-0): Removed `with-slots'
+	binding to `Cv'.  That must have been an error
+
+	* src/hs-collision-integrals.lisp: Imported hard-sphere code from
+	gas-kinetic formulary and adapted to this package
+
+	* src/thermo-data.asd (:thermo-data): Removed dependency on
+	lennard-jones-coeffs.lisp
+	(:thermo-data): Restored dependency on constant-coeff.lisp.  Not
+	sure when I lost that.
+
+	* src/lennard-jones-coeffs.lisp: Moved to collision integrals package:
+	- symbol exports
+	- Reading the coefficients file
+	- print-object (new method)
+
+	* src/collision-integrals-package-def.lisp (:collision-integrals):
+	Added imports from alexandria and my-utils for lennard-jones-coeffs.lisp
+
+	* src/collision-integrals.asd (:collision-integrals): Added
+	"lennard-jones-coeffs.lisp and my-utils package dependency (the
+	latter for polyeval)
+
+2011-08-14  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* src/defaults-setup.lisp: Removed references to collision-integrals
+
+	* src/package-def.lisp (:thermo): Added dependency on
+	:collision-integrals
+
+	* src/thermo-data.asd (:thermo-data): Removed
+	collision-integrals.lisp, added collision-integrals package as a
+	prerecquisite
+
+	* src/hs-collision-integrals.lisp: New file part of collision
+	integrals package
+
+	* src/lj-collision-integrals.lisp: New file part of collision
+	integrals package
+
+	* src/collision-integrals-defaults.lisp: New file part of
+	collision integrals package
+
+	* src/collision-integrals-package-def.lisp: New file part of
+	collision integrals package
+
+	* src/collision-integrals.asd: Start of refactoring collision
+	integrals out of the package
+
+2011-08-11  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* src/janaf-coefficients.lisp (initialize-instance): Added
+	explicit binding of *array-type* as 'foreign-array. 
+
+2011-08-10  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* src/janaf-coefficients.lisp (janaf-coeff): Method specialized on
+	column number, I had temperature specialized as double-float.
+	THis is not a valid class in clisp.  Added conditional code for
+	clisp and sbcl.
+	(read-janaf-table%): Addapted call to mv-grid-utils:read-grid to
+	new calling convention
+
+	* src/environment-setup.lisp (*data-directory*)
+	(*janaf-directory*): Modified home path definition to take into
+	account on which machine the code is running
+
+	* README.org: Cleaned up
+
+	* doc/user-documentation.org: Created file.  Right now it contains junk. 
