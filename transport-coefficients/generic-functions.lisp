@@ -34,7 +34,7 @@ REST - other optional parameters"))|#
 
 Inputs:
 SPECIES1,2 - symbols, objects with collision parameters
-CONCENTRATION1 - relative concentration of species1.
+P1,2 - partial pressures of species1,2
 TEMPERATURE - Temperature, in Kelvin
 REST - other optional parameters that may be required by the default 
        method specified in *MU2-DEFAULT-METHOD*
@@ -47,9 +47,9 @@ Outputs: Mixture viscosity
    "Binary gas mixture viscosity
 
 Inputs:
-MODEL - symbol, specifying the model to be used
+MODEL - symbol, specifying the model to be used (cck or mcc)
 SPECIES1,2 - symbols, objects with collision parameters
-CONCENTRATION1 - relative concentration of species1.
+P1,2 - partial pressures of species1,2
 TEMPERATURE - Temperature, in Kelvin
 REST - other optional parameters
 
@@ -63,7 +63,7 @@ mu1/p1 & mu2/p2, collision frequences for each species")
 
 
 (defgeneric-1+caller lambda-ig1 (species temperature &key &allow-other-keys)
-  (:fun-doc "Thermal conductivity for a pure gas
+  (:fun-doc "Thermal conductivity for a pure ideal gas
 
 SPECIES - a symbol, or an object with collision parameters
 TEMPERATURE - Temperature, in Kelvin
@@ -88,12 +88,12 @@ TEMPERATURE - Temperature, in Kelvin
 REST - other optional parameters"))||#
 
 
-(defgeneric-1+caller lambda-ig2 (model species1 species2 concentration1 temperature
+(defgeneric-1+caller lambda-ig2 (species1 species2 p1 p2 temperature
 		       &key &allow-other-keys)
   (:fun-doc "Binary gas mixture thermal conductivity
 
 SPECIES1,2 - symbols, objects with collision parameters
-CONCENTRATION1 - relative concentration of species1.
+P1,2 - partial pressures of species1,2
 TEMPERATURE - Temperature, in Kelvin
 REST - other optional parameters that may be required by the default method")
   (:default-method 'mcc)
@@ -101,7 +101,7 @@ REST - other optional parameters that may be required by the default method")
 
 MODEL - symbol, specifying the model to be used
 SPECIES1,2 - symbols, objects with collision parameters
-CONCENTRATION1 - relative concentration of species1.
+P1,2 - partial pressures of species1,2
 TEMPERATURE - Temperature, in Kelvin
 REST - other optional parameters"))
 
@@ -133,7 +133,7 @@ CONCENTRATION1 - relative concentration of species1.
 TEMPERATURE - Temperature, in Kelvin
 REST - other optional parameters"))|#
 
-(defgeneric-1+caller D12 (collision-params temperature pressure &key &allow-other-keys)
+(defgeneric-1+caller D12 (collision-params pressure temperature &key &allow-other-keys)
   (:fun-doc "Binary gas diffusion of a binary gas mixture, independent
   of concentrations
 
@@ -150,7 +150,7 @@ TEMPERATURE - Temperature, in Kelvin
 PRESSURE - Pressure in Pa
 REST - other optional parameters determined by MODEL"))
 
-(defgeneric-1+caller D12b (species1 species2 temperature p1 p2 &key &allow-other-keys)
+(defgeneric-1+caller D12b (species1 species2  p1 p2 temperature &key &allow-other-keys)
   (:fun-doc "Binary gas diffusion of a binary gas mixture, dependent
   on concentrations
 
@@ -167,6 +167,32 @@ SPECIES1,2 - Potential parameters of species 1,2
 TEMPERATURE - Temperature, in Kelvin
 P1,2 - Partial pressures of species 1 and 2 in Pa
 REST - other optional parameters determined by MODEL"))
+
+(defgeneric-1+caller Delta (species1 species2 p1 p2 temperature &key &allow-other-keys)
+  (:fun-doc "Species concentration dependent correction to the binary
+  diffusion coefficient D12
+
+The binary diffusion is corrected as (/ D12 (- 1 Delta)) (Ferziger & Kapor, 7.3-40)
+
+SPECIES1,2 - Potential parameters of species 1,2
+TEMPERATURE - Temperature, in Kelvin
+P1,2 - Partial pressures of species 1 and 2 in Pa
+")
+  (:default-method 'cck)
+  (:documentation 
+"Species concentration dependent correction to the binary diffusion coefficient D12
+
+The binary diffusion is corrected as (/ D12 (- 1 Delta)) (Ferziger & Kapor, 7.3-40)
+
+METHOD - CCK or MCC
+SPECIES1,2 - Potential parameters of species 1,2.
+TEMPERATURE - Temperature, in Kelvin
+P1,2 - Partial pressures of species 1 and 2 in Pa
+
+Restrictions: for the CCK model, only Lennard-Jones potentials are
+accepted.  The reason is that the A*, B*, C*, E*, and F*, are now
+calculated for Lennard-Jones potentials only.
+"))
 
 (defgeneric-1+caller alpha-T (potential1 potential2 p1 p2 temperature &key &allow-other-keys)
   (:documentation "Thermal diffusion coefficient of a binary gas mixture

@@ -1,3 +1,62 @@
+2012-08-24  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* transport-coefficients/cck-transport-coefficients.lisp
+	(Delta-1): Fixed docstring error
+
+2012-07-31  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* transport-coefficients/transport-coefficients-user-package-def.lisp
+	(#:transport-coefficients-user): Added package documentation
+
+2012-07-27  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* transport-coefficients/generic-functions.lisp (lambda-ig2):
+	Bug-fix.  Generic function had extra model parameter
+	(mu2, lambda-ig2): Fixed documentation error
+
+	* transport-coefficients/transport-coefficients-user-package-def.lisp
+	(#:transport-coefficients-user): Importing symbols from
+	gas-kinetics-physics-constants
+
+	* transport-coefficients/transport-coefficients-user.asd
+	(#:transport-coefficients-user): Added dependence on
+	gas-kinetics-physics-constants package.
+
+2012-07-18  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* transport-coefficients/generic-functions.lisp: Adapting
+	following argument ordering: 1) species, 2) densities/pressures,
+	3) temperature
+
+	* transport-coefficients/mcc-diffusivity.lisp (delta-1): New
+	method for 'mcc model.  This complements delta calculated for the
+	cck model.
+
+	* transport-coefficients/cck-transport-coefficients.lisp (D12-1):
+	Factored out the numerical coefficient ``coeff'' into a let-form
+	outside the two 'cck methods for hard-sphere and Lennard-Jones
+	potentials.
+	(D12-1): Bug-fix: Commented out an erroneus 1e3 coefficient that
+	multiplied the mass.  That coefficient is absorbed in ``coeff''.
+	This may explain the fudge factor introduced on 2012-07-13 in
+	D12-mcc (see entry below)
+
+2012-07-17  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* transport-coefficients/mcc-diffusivity.lisp (Delta-mcc): New
+	function.
+	(D12-mcc): Rewrote body to use Delta-mcc
+
+2012-07-13  Mirko Vukovic  <mirko.vukovic@us.tel.com>
+
+	* transport-coefficients/mcc-diffusivity.lisp (D12-mcc): I added a
+	multiplier of sqrt 1e3 in order to get agreement with first order
+	Chapan-Enskog.  I have not been able to trace the source of the
+	discrepancy.  See my notes in the low-pressure-flow.org file.
+
+	* transport-coefficients/cck-transport-coefficients.lisp (D12-1):
+	For the cck model I added a method for the hard-sphere potential
+
 2012-07-12  Mirko Vukovic  <mirko.vukovic@us.tel.com>
 
 	* src/thermo-data.asd (:thermo-data): Removed collision integrals

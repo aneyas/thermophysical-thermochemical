@@ -1,5 +1,5 @@
 ;; Mirko Vukovic
-;; Time-stamp: <2012-05-27 22:38:07 cck-transport-coefficients.lisp>
+;; Time-stamp: <2012-08-24 08:31:31 cck-transport-coefficients.lisp>
 ;; 
 ;; Copyright 2011 Mirko Vukovic
 ;; Distributed under the terms of the GNU General Public License
@@ -163,21 +163,170 @@ Kee et al, 12.101"
 	       (omega*-22 (coerce (/ temperature epsilon/K) 'double-float))
 	       (/ Cv mass)))))))
 
-(defmethod D12-1 ((model (eql 'cck))
-		 (coefficients lennard-jones-6/12-potential) temperature pressure
-		 &key)
-  (declare (ignore model))
-  (let ((coeff (* (/ 3 16)
-		  (/ (expt 10 1.5)
-		     +NA20+)
-		  (sqrt (/ (* 2 (expt +R+ 3))
-			   +pi+)))))
-    (with-slots (species sigma epsilon/K mass) coefficients
+(let ( ;; Evaluates to 0.0188 (Chem.React.Flow, Kee et al, 3.100)
+      (coeff (* (/ 3 16)
+		(/ (expt 10 3/2)
+		   +NA20+)
+		(sqrt (/ (* 2 (expt +R+ 3))
+			 +pi+)))))
+  (defmethod D12-1 ((model (eql 'cck))
+		    (coefficients lennard-jones-6/12-potential) pressure temperature
+		    &key)
+    (declare (ignore model))
+    (with-slots (sigma epsilon/K mass) coefficients
       (* coeff
-	 (/ (sqrt (* (expt temperature 3) mass))
+	 (/ (sqrt (/ (expt temperature 3) mass #|(* 1e-3 mass)|#))
 	    (* pressure
 	       (expt sigma 2)
-	       (omega*-11 (coerce (/ temperature epsilon/K) 'double-float))))))))
+	       (omega*-11 (float (/ temperature epsilon/K) 1d0)))))))
+
+  (defmethod D12-1 ((model (eql 'cck))
+		    (coefficients hard-sphere-potential) pressure temperature
+		    &key)
+    (declare (ignore model))
+    (with-slots (sigma mass) coefficients
+      (* coeff
+	 (/ (sqrt (/ (expt temperature 3) mass #|(* 1e-3 mass)|#))
+	    (* pressure
+	       (expt sigma 2)))))))
+
+
+
+(defmethod Delta-1 ((model (eql 'cck))
+		   (potential1 lennard-jones-6/12-potential)
+		   (potential2 lennard-jones-6/12-potential)
+		   p1 p2
+		   temperature
+		   &key)
+  "Species concentration correction factor to D12
+- MODEL -- TC:CCK
+- POTENTIAL1,2 -- Lennard-Jones potentials for the two gases
+- P1,2 -- partial pressures of each gas [Pascal]
+- TEMPERATURE -- Gas temperature [Kelvin]
+
+Ferziger & Kapor 7.3-41
+
+For exp comparison, see F&K, p. 283, Fig. 10.8, p. 283 and
+ 10.9, p. 288"
+  (declare (ignore model))
+  (with-slots ((species1 species) (sigma1 sigma) (epsilon/K1 epsilon/K) (m1 mass))
+      potential1
+    (with-slots ((species2 species) (sigma2 sigma) (epsilon/K2 epsilon/K) (m2 mass))
+	potential2
+      (let ((potential12 (make-collision-parameters potential1 potential2))
+	    (x1 (/ p1 (+ p1 p2))))
+	(with-slots ((partners12 species) (sigma12 sigma)
+		     (epsilon/K12 epsilon/K) (m12 mass)) potential12
+	  (let ((A12* (A* (/ temperature epsilon/K12)))
+		(B12* (B* (/ temperature epsilon/K12)))
+		(C12* (C* (/ temperature epsilon/K12)))
+		(lambda-1 (lambda-ig1-1 'cck potential1 temperature))
+		(lambda-2 (lambda-ig1-1 'cck potential2 temperature))
+		(lambda-12 (/ (lambda-ig1-1 'cck potential12 temperature)
+			      (sqrt 2.0)))
+		(x2 (- 1 x1)))
+	    (let ((P1 (* (/ m1 m2) (/ lambda-12 lambda-1)))
+		  (P2 (* (/ m2 m1) (/ lambda-12 lambda-2)))
+		  (P12 (+ (* (/ 15
+				(* 4 A12*))
+			     (/ (expt (- m1 m2) 2)
+				(* m1 m2)))
+			  2))
+		  (Q1 (* (/ lambda-12 lambda-1)	;; 7.3-44a
+			 (+ (* 3 (/ m2 m1))
+			    (* (- 2.5 (* 1.2 B12*))
+			       (/ m1 m2))
+			    (* 1.6 A12*))))
+		  (Q2 (* (/ lambda-12 lambda-2)	;; 7.3-44b
+			 (+ (* 3 (/ m1 m2))
+			    (* (- 2.5 (* 1.2 B12*))
+			       (/ m2 m1))
+			    (* 1.6 A12*))))
+		  (Q12 (+ (* 3.2 A12* ;; 7.3-44c
+			     (/ (expt (+ m1 m2) 2)
+				(* 4 m1 m2))
+			     (/ (expt lambda-12 2)
+				(* lambda-1 lambda-2)))
+			  (- 11 (* 2.4 B12*))
+			  (* (/ 15 (* 8 A12*))
+			     (/ (expt (- m1 m2) 2)
+				(* m1 m2))
+			     (- 5 (* 2.4 B12*))))))
+	      (* 0.1 (expt (- (* 6 C12*) 5) 2)
+		 (/ (+ (* P1 x1 x1)
+		       (* P2 x2 x2)
+		       (* P12 x1 x2))
+		    (+ (* Q1 x1 x1)
+		       (* Q2 x2 x2)
+		       (* Q12 x1 x2)))))))))))
+
+(defmethod Delta-1 ((model (eql 'cck))
+		   (potential1 hard-sphere-potential)
+		   (potential2 hard-sphere-potential)
+		   p1 p2
+		   temperature
+		   &key)
+  "Species concentration correction factor to D12
+- MODEL -- TC:CCK
+- POTENTIAL1,2 -- hard-sphere for the two gases
+- P1,2 -- partial pressures of each gas [Pascal]
+- TEMPERATURE -- Gas temperature [Kelvin]
+
+Ferziger & Kapor 7.3-41
+
+For exp comparison, see F&K, p. 283, Fig. 10.8, p. 283 and
+ 10.9, p. 288"
+  (declare (ignore model))
+  (with-slots ((species1 species) (sigma1 sigma) (m1 mass))
+      potential1
+    (with-slots ((species2 species) (sigma2 sigma) (m2 mass))
+	potential2
+      (let ((potential12 (make-collision-parameters potential1 potential2))
+	    (x1 (/ p1 (+ p1 p2))))
+	(with-slots ((partners12 species) (sigma12 sigma)
+		     (epsilon/K12 epsilon/K) (m12 mass)) potential12
+	  (let ((A12* 1d0) ;; Ferzier&Kaper 7.1-31,32,33
+		(B12* 1d0)
+		(C12* 1d0)
+		(lambda-1 (lambda-ig1-1 'cck potential1 temperature))
+		(lambda-2 (lambda-ig1-1 'cck potential2 temperature))
+		(lambda-12 (/ (lambda-ig1-1 'cck potential12 temperature)
+			      (sqrt 2.0)))
+		(x2 (- 1 x1)))
+	    (let ((P1 (* (/ m1 m2) (/ lambda-12 lambda-1)))
+		  (P2 (* (/ m2 m1) (/ lambda-12 lambda-2)))
+		  (P12 (+ (* (/ 15
+				(* 4 A12*))
+			     (/ (expt (- m1 m2) 2)
+				(* m1 m2)))
+			  2))
+		  (Q1 (* (/ lambda-12 lambda-1)	;; 7.3-44a
+			 (+ (* 3 (/ m2 m1))
+			    (* (- 2.5 (* 1.2 B12*))
+			       (/ m1 m2))
+			    (* 1.6 A12*))))
+		  (Q2 (* (/ lambda-12 lambda-2)	;; 7.3-44b
+			 (+ (* 3 (/ m1 m2))
+			    (* (- 2.5 (* 1.2 B12*))
+			       (/ m2 m1))
+			    (* 1.6 A12*))))
+		  (Q12 (+ (* 3.2 A12* ;; 7.3-44c
+			     (/ (expt (+ m1 m2) 2)
+				(* 4 m1 m2))
+			     (/ (expt lambda-12 2)
+				(* lambda-1 lambda-2)))
+			  (- 11 (* 2.4 B12*))
+			  (* (/ 15 (* 8 A12*))
+			     (/ (expt (- m1 m2) 2)
+				(* m1 m2))
+			     (- 5 (* 2.4 B12*))))))
+	      (* 0.1 (expt (- (* 6 C12*) 5) 2)
+		 (/ (+ (* P1 x1 x1)
+		       (* P2 x2 x2)
+		       (* P12 x1 x2))
+		    (+ (* Q1 x1 x1)
+		       (* Q2 x2 x2)
+		       (* Q12 x1 x2)))))))))))
 
 ;;; Thermal diffusion ratio alpha-T
 
@@ -187,7 +336,15 @@ Kee et al, 12.101"
 		     p1 p2
 		     temperature
 		     &key)
-  "For exp comparison, see F&K, p. 283, Fig. 10.8, p. 283 and
+  "Thermal diffusion ratio 
+- MODEL -- TC:CCK
+- POTENTIAL1,2 -- Lennard-Jones potentials for the two gases
+- P1,2 -- partial pressures of each gas [Pascal]
+- TEMPERATURE -- Gas temperature [Kelvin]
+
+Ferziger & Kapor 7.3-69
+
+For exp comparison, see F&K, p. 283, Fig. 10.8, p. 283 and
  10.9, p. 288"
   (declare (ignore model))
   (with-slots ((species1 species) (sigma1 sigma) (epsilon/K1 epsilon/K) (m1 mass))

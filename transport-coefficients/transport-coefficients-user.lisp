@@ -1,23 +1,8 @@
+
+
 (in-package :tcu)
 
 
-(defun D12-cck/mcc (s1 s2 p1 p2 temp)
-  "Comparison of D12 calculated via CCK and MCC"
-  (let ((c (make-collision-parameters s1 s2))
-	(p (+ p1 p2)))
-    (format t "D12-cck: ~a~%"(d12-1 'cck c temp p))
-    (multiple-value-bind (d12-mcc d21-mcc)
-	(d12b s1 s2 temp p1 p2)
-      (format t "D12-mcc: ~a (~a+~a)~%" (+ d12-mcc d21-mcc)
-	      d12-mcc d21-mcc))))
-
-(define-test d12-cck/mcc
-  (let ((s1 (make-species-lennard-jones-6/12-potential :Ar))
-	(s2 (make-species-lennard-jones-6/12-potential :Ar))
-	(p1 50d0)
-	(p2 50d0)
-	(temp 300d0))
-    (d12-cck/mcc s1 s2 p1 p2 temp)))
 
 
 

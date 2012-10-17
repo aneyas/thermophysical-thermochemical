@@ -9,11 +9,13 @@
 	#:gas-kinetic-formulary
 	#:index-sugar)
   (:shadow #:gas-kinetic-formulary :D12
-	   :alpha-t)
+	   :alpha-t
+	   :delta-1)
   (:export :cck :mcc
 	   :*d12-default-method*
 	   :d12 :d12-1
 	   :d12b :d12b-1
+	   :delta :delta-1 ;; this will cause conflicts with gas-kinetic formulary
 	   :*mu1-default-method*
 	   :*mu2-default-method*
 	   :mu1 :mu1-1

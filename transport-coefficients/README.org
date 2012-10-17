@@ -1,1 +1,26 @@
-This is the stub README.txt for the "transport-coefficients" project.
+#+title: Transport coefficients for gases
+
+* Introduction
+
+  This package implements code for calculating transport coefficients
+  of gases and gas mixtures.
+
+  Some of the expressions are based on the Chapman-Enskog solution
+  while others (implemented but still to be included into the package)
+  are numerical fits to experimental data
+
+  The code will eventually provide means of selecting which method is
+  used.
+
+  Most of the inputs to the code are in SI units and the code returns
+  quantities in SI units.
+
+
+* User interface conventions
+  The functions that calculate viscosity, thermal conductivity,
+  diffusion, accept arguments in the following order:
+  - model (if needed)
+  - species or collision parameters (objects of type molecular potential)
+  - density specification (densities, concentrations, or pressures)
+  - temperature
+  - others.
